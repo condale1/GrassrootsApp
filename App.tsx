@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
 
 import { MenuDrawer } from "./src/components/MenuDrawer";
@@ -7,6 +7,7 @@ import { useAgeGroup } from "./src/hooks/useAgeGroup";
 import { useMatchdayBoard } from "./src/hooks/useMatchdayBoard";
 import { useSessionBuilder } from "./src/hooks/useSessionBuilder";
 import { useSquad } from "./src/hooks/useSquad";
+import { resetScrollPosition } from "./src/lib/scroll";
 import { CoachToolboxScreen } from "./src/screens/CoachToolboxScreen";
 import { GameTimeCalculatorScreen } from "./src/screens/GameTimeCalculatorScreen";
 import { MatchdayBoardScreen } from "./src/screens/MatchdayBoardScreen";
@@ -17,6 +18,7 @@ import { AppTab } from "./src/types";
 export default function App() {
   const [activeScreen, setActiveScreen] = useState<AppTab | "squad">("gameTime");
   const [menuOpen, setMenuOpen] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
   const ageGroup = useAgeGroup();
   const matchdayBoard = useMatchdayBoard();
   const sessionBuilder = useSessionBuilder();
@@ -28,13 +30,17 @@ export default function App() {
     : activeScreen === "squad"
       ? { title: "Squad" }
       : activeScreen === "sessions" ? { title: "Sessions" } : { title: "Coach Toolbox" };
+  const navigateTo = (screen: AppTab | "squad") => {
+    resetScrollPosition(scrollViewRef);
+    setActiveScreen(screen);
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.shell}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.keyboardArea}>
-          <ScrollView automaticallyAdjustKeyboardInsets contentContainerStyle={styles.content} keyboardDismissMode="interactive" keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          <ScrollView automaticallyAdjustKeyboardInsets contentContainerStyle={styles.content} keyboardDismissMode="interactive" keyboardShouldPersistTaps="handled" ref={scrollViewRef} showsVerticalScrollIndicator={false}>
             <View style={styles.header}>
               <View style={styles.titleRow}><Text style={styles.title}>{copy.title}</Text><Pressable accessibilityLabel="Open menu" onPress={() => setMenuOpen(true)} style={styles.menuButton}><View style={styles.menuLine} /><View style={styles.menuLine} /><View style={styles.menuLine} /></Pressable></View>
             </View>
@@ -44,9 +50,9 @@ export default function App() {
             {activeScreen === "sessions" ? <SessionBuilderScreen ageGroup={ageGroup.ageGroup} {...sessionBuilder} /> : null}
             {activeScreen === "toolbox" ? <CoachToolboxScreen {...ageGroup} /> : null}
           </ScrollView>
-          <TabBar activeTab={activeScreen === "squad" ? "gameTime" : activeScreen} onChange={setActiveScreen} />
+          <TabBar activeTab={activeScreen === "squad" ? "gameTime" : activeScreen} onChange={navigateTo} />
         </KeyboardAvoidingView>
-        <MenuDrawer onClose={() => setMenuOpen(false)} onOpenSquad={() => { setActiveScreen("squad"); setMenuOpen(false); }} visible={menuOpen} />
+        <MenuDrawer onClose={() => setMenuOpen(false)} onOpenSquad={() => { navigateTo("squad"); setMenuOpen(false); }} visible={menuOpen} />
       </View>
     </SafeAreaView>
   );

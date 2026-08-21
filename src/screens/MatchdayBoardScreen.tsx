@@ -1,5 +1,7 @@
+import { useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
+import { shareMatchdayGraphic } from "../lib/shareMatchdayGraphic";
 import { MatchdayDraft, Player } from "../types";
 
 type Props = { draft: MatchdayDraft; hasLoadedMatchday: boolean; players: Player[]; setDraft: React.Dispatch<React.SetStateAction<MatchdayDraft>> };
@@ -8,7 +10,17 @@ export function MatchdayBoardScreen({ draft, hasLoadedMatchday, players, setDraf
   const availablePlayers = players.filter((player) => player.available);
   const completedChecks = draft.checks.filter((check) => check.done).length;
   const date = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", weekday: "long" }).format(new Date());
+  const shareCardRef = useRef<View>(null);
+  const [isSharing, setIsSharing] = useState(false);
   const updateField = (field: "focus" | "kickoff" | "opponent" | "venue", value: string) => setDraft((current) => ({ ...current, [field]: value }));
+  const sharePlan = async () => {
+    setIsSharing(true);
+    try {
+      await shareMatchdayGraphic(shareCardRef);
+    } finally {
+      setIsSharing(false);
+    }
+  };
 
   return <View style={styles.container}>
     <View style={styles.hero}>
@@ -25,6 +37,20 @@ export function MatchdayBoardScreen({ draft, hasLoadedMatchday, players, setDraf
     <View style={styles.focusCard}>
       <Text style={styles.focusTitle}>Today’s focus</Text>
       <TextInput accessibilityLabel="Coaching focus" multiline onChangeText={(value) => updateField("focus", value)} placeholder="e.g. Be brave receiving the ball, then play forward." placeholderTextColor="#7b8a79" style={styles.focusInput} value={draft.focus} />
+    </View>
+
+    <View style={styles.shareSection}>
+      <View collapsable={false} ref={shareCardRef} style={styles.shareCard}>
+        <View style={styles.shareTop}><Text style={styles.shareBrand}>GRASSROOTS FC</Text><Text style={styles.shareDate}>{date}</Text></View>
+        <Text style={styles.shareOpponent}>{draft.opponent.trim() || "Opponent to be confirmed"}</Text>
+        <View style={styles.shareMeta}><Text style={styles.shareMetaItem}>{draft.kickoff.trim() || "Kick-off TBC"}</Text><Text style={styles.shareMetaItem}>{draft.venue.trim() || "Venue TBC"}</Text></View>
+        <View style={styles.shareRule} />
+        <Text style={styles.shareFocusLabel}>TODAY'S FOCUS</Text>
+        <Text style={styles.shareFocus}>{draft.focus.trim() || "Play with confidence and enjoy the game."}</Text>
+        <Text style={styles.shareSquadLabel}>SQUAD ({availablePlayers.length})</Text>
+        <Text style={styles.shareSquad}>{availablePlayers.length ? availablePlayers.map((player) => player.name.trim() || "Player").join("  ·  ") : "Availability to be confirmed"}</Text>
+      </View>
+      <Pressable accessibilityLabel="Share match plan" disabled={isSharing} onPress={() => void sharePlan()} style={[styles.shareButton, isSharing ? styles.shareButtonDisabled : null]}><Text style={styles.shareButtonText}>{isSharing ? "Preparing image..." : "Share match plan"}</Text></Pressable>
     </View>
 
     <View style={styles.section}><View style={styles.sectionHeader}><Text style={styles.sectionTitle}>Squad ready</Text><Text style={styles.count}>{availablePlayers.length} available</Text></View><View style={styles.players}>{availablePlayers.length ? availablePlayers.map((player) => <View key={player.id} style={styles.player}><Text style={styles.playerName}>{player.name.trim() || "Unnamed player"}</Text></View>) : <Text style={styles.empty}>Set player availability in Squad before the match.</Text>}</View></View>
@@ -66,5 +92,21 @@ const styles = StyleSheet.create({
   section: { gap: 10 },
   sectionHeader: { alignItems: "center", flexDirection: "row", justifyContent: "space-between" },
   sectionTitle: { color: "#1a2a1e", fontFamily: "Avenir Next Condensed", fontSize: 23, fontWeight: "800", letterSpacing: -0.3 },
+  shareBrand: { color: "#dce8b1", fontSize: 11, fontWeight: "900", letterSpacing: 1.4 },
+  shareButton: { alignItems: "center", backgroundColor: "#19382a", borderRadius: 9, paddingVertical: 13 },
+  shareButtonDisabled: { opacity: 0.65 },
+  shareButtonText: { color: "#ffffff", fontSize: 14, fontWeight: "800" },
+  shareCard: { backgroundColor: "#19382a", borderRadius: 12, gap: 8, padding: 20 },
+  shareDate: { color: "#d9e1d4", fontSize: 11, fontWeight: "700" },
+  shareFocus: { color: "#ffffff", fontSize: 16, fontWeight: "700", lineHeight: 22 },
+  shareFocusLabel: { color: "#dce8b1", fontSize: 10, fontWeight: "900", letterSpacing: 1.2, marginTop: 4 },
+  shareMeta: { flexDirection: "row", gap: 8 },
+  shareMetaItem: { backgroundColor: "#31543a", color: "#ffffff", flex: 1, fontSize: 12, fontWeight: "700", paddingHorizontal: 9, paddingVertical: 7, textAlign: "center" },
+  shareOpponent: { color: "#ffffff", fontFamily: "Avenir Next Condensed", fontSize: 32, fontWeight: "800", letterSpacing: -0.5 },
+  shareRule: { backgroundColor: "#dce8b1", height: 3, marginVertical: 3, width: 42 },
+  shareSection: { gap: 8 },
+  shareSquad: { color: "#d9e1d4", fontSize: 12, fontWeight: "600", lineHeight: 18 },
+  shareSquadLabel: { color: "#dce8b1", fontSize: 10, fontWeight: "900", letterSpacing: 1.2, marginTop: 4 },
+  shareTop: { flexDirection: "row", justifyContent: "space-between" },
   tick: { color: "#18321f", fontSize: 15, fontWeight: "900" }
 });

@@ -9,6 +9,7 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.condale1.grassrootsapp",
       "supportsTablet": true
     },
     "android": {

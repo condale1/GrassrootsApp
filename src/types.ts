@@ -4,4 +4,7 @@ export type Player = {
   name: string;
 };
 
-export type AppTab = "gameTime" | "squad" | "toolbox";
+export type AppTab = "gameTime" | "sessions" | "toolbox";
+
+export type SessionBlock = { drillId: string; id: string; minutes: number };
+export type SessionDraft = { blocks: SessionBlock[]; title: string };

@@ -4,7 +4,7 @@ import { AppTab } from "../types";
 
 const tabs: { id: AppTab; label: string }[] = [
   { id: "gameTime", label: "Game Time" },
-  { id: "squad", label: "Squad" },
+  { id: "sessions", label: "Sessions" },
   { id: "toolbox", label: "Toolbox" }
 ];
 

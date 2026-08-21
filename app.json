@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "Grassroots FC",
+    "slug": "grassroots-fc",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#f6f1e8"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

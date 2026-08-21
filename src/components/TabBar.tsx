@@ -4,7 +4,8 @@ import { AppTab } from "../types";
 
 const tabs: { id: AppTab; label: string }[] = [
   { id: "gameTime", label: "Game Time" },
-  { id: "squad", label: "Squad" },
+  { id: "matchday", label: "Matchday" },
+  { id: "sessions", label: "Sessions" },
   { id: "toolbox", label: "Toolbox" }
 ];
 
@@ -26,9 +27,9 @@ export function TabBar({ activeTab, onChange }: TabBarProps) {
 }
 
 const styles = StyleSheet.create({
-  label: { color: "#d7dfd2", fontSize: 13, fontWeight: "800" },
+  label: { color: "#d7dfd2", fontSize: 11, fontWeight: "800", letterSpacing: 0.1 },
   labelActive: { color: "#152118" },
-  tab: { alignItems: "center", borderRadius: 18, flex: 1, justifyContent: "center", paddingVertical: 12 },
+  tab: { alignItems: "center", borderRadius: 10, flex: 1, justifyContent: "center", paddingVertical: 13 },
   tabActive: { backgroundColor: "#d6e58f" },
-  wrap: { backgroundColor: "#14281d", borderRadius: 24, bottom: 18, flexDirection: "row", gap: 8, left: 16, padding: 8, position: "absolute", right: 16 }
+  wrap: { backgroundColor: "#19382a", borderRadius: 14, flexDirection: "row", gap: 4, marginBottom: 12, marginHorizontal: 16, padding: 5 }
 });

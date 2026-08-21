@@ -1,41 +1,58 @@
-import { useState } from "react";
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
+import { useRef, useState } from "react";
+import { KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
 
+import { MenuDrawer } from "./src/components/MenuDrawer";
 import { TabBar } from "./src/components/TabBar";
 import { useAgeGroup } from "./src/hooks/useAgeGroup";
+import { useMatchdayBoard } from "./src/hooks/useMatchdayBoard";
+import { useSessionBuilder } from "./src/hooks/useSessionBuilder";
 import { useSquad } from "./src/hooks/useSquad";
+import { resetScrollPosition } from "./src/lib/scroll";
 import { CoachToolboxScreen } from "./src/screens/CoachToolboxScreen";
 import { GameTimeCalculatorScreen } from "./src/screens/GameTimeCalculatorScreen";
+import { MatchdayBoardScreen } from "./src/screens/MatchdayBoardScreen";
+import { SessionBuilderScreen } from "./src/screens/SessionBuilderScreen";
 import { SquadScreen } from "./src/screens/SquadScreen";
 import { AppTab } from "./src/types";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<AppTab>("gameTime");
+  const [activeScreen, setActiveScreen] = useState<AppTab | "squad">("gameTime");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
   const ageGroup = useAgeGroup();
+  const matchdayBoard = useMatchdayBoard();
+  const sessionBuilder = useSessionBuilder();
   const squad = useSquad();
-  const copy = activeTab === "gameTime"
-    ? { title: "Game Time", subtitle: "Build a simple, fair rotation plan before kick-off." }
-    : activeTab === "squad"
-      ? { title: "Squad", subtitle: "Keep your players and match-day availability in one place." }
-      : { title: "Coach Toolbox", subtitle: "Age-group rules, pitch dimensions, and match set-up at a glance." };
+  const copy = activeScreen === "gameTime"
+    ? { title: "Game Time" }
+    : activeScreen === "matchday"
+      ? { title: "Matchday" }
+    : activeScreen === "squad"
+      ? { title: "Squad" }
+      : activeScreen === "sessions" ? { title: "Sessions" } : { title: "Coach Toolbox" };
+  const navigateTo = (screen: AppTab | "squad") => {
+    resetScrollPosition(scrollViewRef);
+    setActiveScreen(screen);
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.shell}>
-        <View style={styles.backgroundOrbTop} />
-        <View style={styles.backgroundOrbBottom} />
-        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-          <View style={styles.header}>
-            <Text style={styles.eyebrow}>Coach tools</Text>
-            <Text style={styles.title}>{copy.title}</Text>
-            <Text style={styles.subtitle}>{copy.subtitle}</Text>
-          </View>
-          {activeTab === "gameTime" ? <GameTimeCalculatorScreen players={squad.players} /> : null}
-          {activeTab === "squad" ? <SquadScreen {...squad} /> : null}
-          {activeTab === "toolbox" ? <CoachToolboxScreen {...ageGroup} /> : null}
-        </ScrollView>
-        <TabBar activeTab={activeTab} onChange={setActiveTab} />
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.keyboardArea}>
+          <ScrollView automaticallyAdjustKeyboardInsets contentContainerStyle={styles.content} keyboardDismissMode="interactive" keyboardShouldPersistTaps="handled" ref={scrollViewRef} showsVerticalScrollIndicator={false}>
+            <View style={styles.header}>
+              <View style={styles.titleRow}><Text style={styles.title}>{copy.title}</Text><Pressable accessibilityLabel="Open menu" onPress={() => setMenuOpen(true)} style={styles.menuButton}><View style={styles.menuLine} /><View style={styles.menuLine} /><View style={styles.menuLine} /></Pressable></View>
+            </View>
+            {activeScreen === "gameTime" ? <GameTimeCalculatorScreen players={squad.players} /> : null}
+            {activeScreen === "matchday" ? <MatchdayBoardScreen {...matchdayBoard} players={squad.players} /> : null}
+            {activeScreen === "squad" ? <SquadScreen {...squad} /> : null}
+            {activeScreen === "sessions" ? <SessionBuilderScreen ageGroup={ageGroup.ageGroup} {...sessionBuilder} /> : null}
+            {activeScreen === "toolbox" ? <CoachToolboxScreen {...ageGroup} /> : null}
+          </ScrollView>
+          <TabBar activeTab={activeScreen === "squad" ? "gameTime" : activeScreen} onChange={navigateTo} />
+        </KeyboardAvoidingView>
+        <MenuDrawer onClose={() => setMenuOpen(false)} onOpenSquad={() => { navigateTo("squad"); setMenuOpen(false); }} visible={menuOpen} />
       </View>
     </SafeAreaView>
   );
@@ -44,58 +61,29 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#efe9de"
+    backgroundColor: "#f3f0e8"
   },
   shell: {
     flex: 1,
-    backgroundColor: "#efe9de"
+    backgroundColor: "#f3f0e8"
   },
   content: {
+    flexGrow: 1,
     paddingHorizontal: 20,
-    paddingTop: 18,
-    paddingBottom: 104,
+    paddingTop: 24,
+    paddingBottom: 24,
     gap: 18
   },
-  header: {
-    gap: 8
-  },
-  eyebrow: {
-    color: "#5d7758",
-    fontSize: 12,
-    fontWeight: "700",
-    letterSpacing: 2.2,
-    textTransform: "uppercase"
-  },
+  keyboardArea: { flex: 1 },
+  header: { paddingBottom: 2 },
+  menuButton: { alignItems: "center", backgroundColor: "#19382a", borderRadius: 12, gap: 4, height: 42, justifyContent: "center", width: 42 },
+  menuLine: { backgroundColor: "#f4f0e5", borderRadius: 2, height: 2, width: 17 },
   title: {
     color: "#14281d",
-    fontSize: 34,
+    fontFamily: "Avenir Next Condensed",
+    fontSize: 38,
     fontWeight: "800",
-    letterSpacing: -1.2
+    letterSpacing: -1.4
   },
-  subtitle: {
-    color: "#425044",
-    fontSize: 16,
-    lineHeight: 22,
-    maxWidth: 320
-  },
-  backgroundOrbTop: {
-    position: "absolute",
-    top: -80,
-    right: -20,
-    width: 220,
-    height: 220,
-    borderRadius: 110,
-    backgroundColor: "#d6e58f",
-    opacity: 0.22
-  },
-  backgroundOrbBottom: {
-    position: "absolute",
-    bottom: 90,
-    left: -60,
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: "#f28f3b",
-    opacity: 0.13
-  }
+  titleRow: { alignItems: "center", flexDirection: "row", justifyContent: "space-between" }
 });

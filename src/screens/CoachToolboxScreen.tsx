@@ -10,7 +10,6 @@ export function CoachToolboxScreen({ ageGroup, setAgeGroup }: CoachToolboxScreen
   return (
     <View style={styles.container}>
       <View style={styles.introCard}>
-        <Text style={styles.introLabel}>Your age group</Text>
         <Text style={styles.introTitle}>{guidance.age} football</Text>
         <Text style={styles.introText}>Choose your team once. The toolbox keeps this setting for future coach tools.</Text>
       </View>
@@ -73,29 +72,28 @@ const styles = StyleSheet.create({
   ageButtonLabelActive: { color: "#dce8b1" },
   agePicker: { gap: 8, paddingRight: 20 },
   container: { gap: 20 },
-  introCard: { backgroundColor: "#1c3825", borderRadius: 24, gap: 4, padding: 20 },
-  introLabel: { color: "#dce8b1", fontSize: 11, fontWeight: "800", letterSpacing: 1.6, textTransform: "uppercase" },
+  introCard: { backgroundColor: "#19382a", borderRadius: 14, gap: 5, padding: 20 },
   introText: { color: "#dce4d5", fontSize: 14, lineHeight: 20, marginTop: 4, maxWidth: 300 },
-  introTitle: { color: "#ffffff", fontSize: 30, fontWeight: "800", letterSpacing: -0.8 },
-  metric: { backgroundColor: "#e7edcf", borderRadius: 16, flexGrow: 1, gap: 3, minWidth: "44%", padding: 14 },
+  introTitle: { color: "#ffffff", fontFamily: "Avenir Next Condensed", fontSize: 34, fontWeight: "800", letterSpacing: -0.8 },
+  metric: { backgroundColor: "#e5ebc7", borderRadius: 10, flexGrow: 1, gap: 3, minWidth: "44%", padding: 14 },
   metricLabel: { color: "#5a6856", fontSize: 11, fontWeight: "700" },
   metricValue: { color: "#18321f", fontSize: 17, fontWeight: "800" },
-  pitchCard: { backgroundColor: "#f8f5ed", borderColor: "#ded7c8", borderRadius: 20, borderWidth: 1, gap: 12, padding: 18 },
-  pitchLabel: { color: "#5f6d59", fontSize: 11, fontWeight: "800", letterSpacing: 1.3, textTransform: "uppercase" },
+  pitchCard: { backgroundColor: "#f8f5ed", borderColor: "#ded7c8", borderRadius: 12, borderWidth: 1, gap: 12, padding: 18 },
+  pitchLabel: { color: "#5f6d59", fontSize: 13, fontWeight: "700" },
   pitchRow: { borderTopColor: "#ded7c8", borderTopWidth: StyleSheet.hairlineWidth, flexDirection: "row", justifyContent: "space-between", paddingTop: 10 },
   pitchRowLabel: { color: "#697166", fontSize: 13 },
   pitchRowValue: { color: "#1a2a1e", fontSize: 13, fontWeight: "800" },
   pitchRows: { gap: 10 },
-  pitchSize: { color: "#1a2a1e", fontSize: 29, fontWeight: "800", letterSpacing: -0.8 },
+  pitchSize: { color: "#1a2a1e", fontFamily: "Avenir Next Condensed", fontSize: 33, fontWeight: "800", letterSpacing: -0.8 },
   ruleDot: { backgroundColor: "#f28f3b", borderRadius: 4, height: 8, marginTop: 6, width: 8 },
   ruleRow: { flexDirection: "row", gap: 10 },
   ruleText: { color: "#29362c", flex: 1, fontSize: 14, lineHeight: 20 },
-  rulesCard: { backgroundColor: "#f8f5ed", borderColor: "#ded7c8", borderRadius: 20, borderWidth: 1, gap: 12, padding: 18 },
+  rulesCard: { backgroundColor: "#f8f5ed", borderColor: "#ded7c8", borderRadius: 12, borderWidth: 1, gap: 12, padding: 18 },
   section: { gap: 10 },
-  sectionTitle: { color: "#1a2a1e", fontSize: 19, fontWeight: "800", letterSpacing: -0.2 },
+  sectionTitle: { color: "#1a2a1e", fontFamily: "Avenir Next Condensed", fontSize: 23, fontWeight: "800", letterSpacing: -0.3 },
   sourceButton: { alignSelf: "flex-start", backgroundColor: "#dce8b1", borderRadius: 12, marginTop: 2, paddingHorizontal: 14, paddingVertical: 10 },
   sourceButtonText: { color: "#18321f", fontSize: 13, fontWeight: "800" },
-  sourceCard: { backgroundColor: "#e5e1d6", borderRadius: 20, gap: 7, padding: 18 },
+  sourceCard: { backgroundColor: "#e5e1d6", borderRadius: 12, gap: 7, padding: 18 },
   sourceText: { color: "#4e594c", fontSize: 13, lineHeight: 19 },
   sourceTitle: { color: "#1a2a1e", fontSize: 16, fontWeight: "800" },
   summaryGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8 }

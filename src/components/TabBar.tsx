@@ -26,9 +26,9 @@ export function TabBar({ activeTab, onChange }: TabBarProps) {
 }
 
 const styles = StyleSheet.create({
-  label: { color: "#d7dfd2", fontSize: 13, fontWeight: "800" },
+  label: { color: "#d7dfd2", fontSize: 12, fontWeight: "800", letterSpacing: 0.2 },
   labelActive: { color: "#152118" },
-  tab: { alignItems: "center", borderRadius: 18, flex: 1, justifyContent: "center", paddingVertical: 12 },
+  tab: { alignItems: "center", borderRadius: 10, flex: 1, justifyContent: "center", paddingVertical: 13 },
   tabActive: { backgroundColor: "#d6e58f" },
-  wrap: { backgroundColor: "#14281d", borderRadius: 24, flexDirection: "row", gap: 8, marginBottom: 12, marginHorizontal: 16, padding: 8 }
+  wrap: { backgroundColor: "#19382a", borderRadius: 14, flexDirection: "row", gap: 4, marginBottom: 12, marginHorizontal: 16, padding: 5 }
 });

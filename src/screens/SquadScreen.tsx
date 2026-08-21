@@ -54,7 +54,7 @@ export function SquadScreen({ hasLoadedSquad, players, setPlayers }: SquadScreen
 }
 
 const styles = StyleSheet.create({
-  addPlayerButton: { alignItems: "center", borderColor: "#78925d", borderRadius: 14, borderStyle: "dashed", borderWidth: 1, paddingVertical: 12 },
+  addPlayerButton: { alignItems: "center", borderColor: "#78925d", borderRadius: 10, borderStyle: "dashed", borderWidth: 1, paddingVertical: 12 },
   addPlayerButtonText: { color: "#315129", fontSize: 14, fontWeight: "800" },
   availabilityButton: { alignItems: "center", borderRadius: 10, justifyContent: "center", minWidth: 68, paddingHorizontal: 8, paddingVertical: 9 },
   availabilityButtonAvailable: { backgroundColor: "#dcebc1" },
@@ -66,15 +66,15 @@ const styles = StyleSheet.create({
   nameInput: { color: "#1a2a1e", flex: 1, fontSize: 15, fontWeight: "700", minWidth: 70, paddingHorizontal: 6, paddingVertical: 0 },
   nameInputUnavailable: { color: "#77776f", textDecorationLine: "line-through" },
   playerList: { gap: 7 },
-  playerRow: { alignItems: "center", backgroundColor: "#f8f5ed", borderColor: "#ded7c8", borderRadius: 14, borderWidth: 1, flexDirection: "row", gap: 5, padding: 6 },
+  playerRow: { alignItems: "center", backgroundColor: "#f8f5ed", borderColor: "#ded7c8", borderRadius: 10, borderWidth: 1, flexDirection: "row", gap: 5, padding: 6 },
   playerRowUnavailable: { backgroundColor: "#f1eee6", borderColor: "#e1dbcf" },
   removeButton: { alignItems: "center", height: 32, justifyContent: "center", width: 28 },
   removeButtonText: { color: "#8b6150", fontSize: 18, fontWeight: "600" },
   section: { gap: 10 },
   sectionHint: { color: "#626d60", fontSize: 14, lineHeight: 20 },
-  sectionTitle: { color: "#1a2a1e", fontSize: 19, fontWeight: "800", letterSpacing: -0.2 },
-  summary: { alignItems: "center", backgroundColor: "#1c3825", borderRadius: 24, flexDirection: "row", gap: 14, padding: 20 },
+  sectionTitle: { color: "#1a2a1e", fontFamily: "Avenir Next Condensed", fontSize: 23, fontWeight: "800", letterSpacing: -0.3 },
+  summary: { alignItems: "center", backgroundColor: "#19382a", borderRadius: 14, flexDirection: "row", gap: 14, padding: 20 },
   summaryCaption: { color: "#d0d9c3", fontSize: 12, marginTop: 2 },
   summaryLabel: { color: "#ffffff", fontSize: 17, fontWeight: "800" },
-  summaryValue: { color: "#dce8b1", fontSize: 42, fontWeight: "800", letterSpacing: -1 }
+  summaryValue: { color: "#dce8b1", fontFamily: "Avenir Next Condensed", fontSize: 46, fontWeight: "800", letterSpacing: -1 }
 });

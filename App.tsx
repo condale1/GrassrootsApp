@@ -19,23 +19,19 @@ export default function App() {
   const sessionBuilder = useSessionBuilder();
   const squad = useSquad();
   const copy = activeScreen === "gameTime"
-    ? { title: "Game Time", subtitle: "Build a simple, fair rotation plan before kick-off." }
+    ? { title: "Game Time" }
     : activeScreen === "squad"
-      ? { title: "Squad", subtitle: "Keep your players and match-day availability in one place." }
-      : activeScreen === "sessions" ? { title: "Sessions", subtitle: "Create a lively training plan, one block at a time." } : { title: "Coach Toolbox", subtitle: "Age-group rules, pitch dimensions, and match set-up at a glance." };
+      ? { title: "Squad" }
+      : activeScreen === "sessions" ? { title: "Sessions" } : { title: "Coach Toolbox" };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.shell}>
-        <View style={styles.backgroundOrbTop} />
-        <View style={styles.backgroundOrbBottom} />
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.keyboardArea}>
           <ScrollView automaticallyAdjustKeyboardInsets contentContainerStyle={styles.content} keyboardDismissMode="interactive" keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
             <View style={styles.header}>
-              <Text style={styles.eyebrow}>Coach tools</Text>
               <View style={styles.titleRow}><Text style={styles.title}>{copy.title}</Text><Pressable accessibilityLabel="Open menu" onPress={() => setMenuOpen(true)} style={styles.menuButton}><View style={styles.menuLine} /><View style={styles.menuLine} /><View style={styles.menuLine} /></Pressable></View>
-              <Text style={styles.subtitle}>{copy.subtitle}</Text>
             </View>
             {activeScreen === "gameTime" ? <GameTimeCalculatorScreen players={squad.players} /> : null}
             {activeScreen === "squad" ? <SquadScreen {...squad} /> : null}
@@ -53,63 +49,29 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#efe9de"
+    backgroundColor: "#f3f0e8"
   },
   shell: {
     flex: 1,
-    backgroundColor: "#efe9de"
+    backgroundColor: "#f3f0e8"
   },
   content: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingTop: 18,
+    paddingTop: 24,
     paddingBottom: 24,
     gap: 18
   },
   keyboardArea: { flex: 1 },
-  header: {
-    gap: 8
-  },
-  menuButton: { alignItems: "center", backgroundColor: "#dce8b1", borderRadius: 16, gap: 4, height: 40, justifyContent: "center", width: 40 },
-  menuLine: { backgroundColor: "#18321f", borderRadius: 2, height: 2, width: 17 },
-  eyebrow: {
-    color: "#5d7758",
-    fontSize: 12,
-    fontWeight: "700",
-    letterSpacing: 2.2,
-    textTransform: "uppercase"
-  },
+  header: { paddingBottom: 2 },
+  menuButton: { alignItems: "center", backgroundColor: "#19382a", borderRadius: 12, gap: 4, height: 42, justifyContent: "center", width: 42 },
+  menuLine: { backgroundColor: "#f4f0e5", borderRadius: 2, height: 2, width: 17 },
   title: {
     color: "#14281d",
-    fontSize: 34,
+    fontFamily: "Avenir Next Condensed",
+    fontSize: 38,
     fontWeight: "800",
-    letterSpacing: -1.2
+    letterSpacing: -1.4
   },
-  titleRow: { alignItems: "center", flexDirection: "row", justifyContent: "space-between" },
-  subtitle: {
-    color: "#425044",
-    fontSize: 16,
-    lineHeight: 22,
-    maxWidth: 320
-  },
-  backgroundOrbTop: {
-    position: "absolute",
-    top: -80,
-    right: -20,
-    width: 220,
-    height: 220,
-    borderRadius: 110,
-    backgroundColor: "#d6e58f",
-    opacity: 0.22
-  },
-  backgroundOrbBottom: {
-    position: "absolute",
-    bottom: 90,
-    left: -60,
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: "#f28f3b",
-    opacity: 0.13
-  }
+  titleRow: { alignItems: "center", flexDirection: "row", justifyContent: "space-between" }
 });

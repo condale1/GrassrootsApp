@@ -4,10 +4,12 @@ import { KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, St
 import { MenuDrawer } from "./src/components/MenuDrawer";
 import { TabBar } from "./src/components/TabBar";
 import { useAgeGroup } from "./src/hooks/useAgeGroup";
+import { useMatchdayBoard } from "./src/hooks/useMatchdayBoard";
 import { useSessionBuilder } from "./src/hooks/useSessionBuilder";
 import { useSquad } from "./src/hooks/useSquad";
 import { CoachToolboxScreen } from "./src/screens/CoachToolboxScreen";
 import { GameTimeCalculatorScreen } from "./src/screens/GameTimeCalculatorScreen";
+import { MatchdayBoardScreen } from "./src/screens/MatchdayBoardScreen";
 import { SessionBuilderScreen } from "./src/screens/SessionBuilderScreen";
 import { SquadScreen } from "./src/screens/SquadScreen";
 import { AppTab } from "./src/types";
@@ -16,10 +18,13 @@ export default function App() {
   const [activeScreen, setActiveScreen] = useState<AppTab | "squad">("gameTime");
   const [menuOpen, setMenuOpen] = useState(false);
   const ageGroup = useAgeGroup();
+  const matchdayBoard = useMatchdayBoard();
   const sessionBuilder = useSessionBuilder();
   const squad = useSquad();
   const copy = activeScreen === "gameTime"
     ? { title: "Game Time" }
+    : activeScreen === "matchday"
+      ? { title: "Matchday" }
     : activeScreen === "squad"
       ? { title: "Squad" }
       : activeScreen === "sessions" ? { title: "Sessions" } : { title: "Coach Toolbox" };
@@ -34,6 +39,7 @@ export default function App() {
               <View style={styles.titleRow}><Text style={styles.title}>{copy.title}</Text><Pressable accessibilityLabel="Open menu" onPress={() => setMenuOpen(true)} style={styles.menuButton}><View style={styles.menuLine} /><View style={styles.menuLine} /><View style={styles.menuLine} /></Pressable></View>
             </View>
             {activeScreen === "gameTime" ? <GameTimeCalculatorScreen players={squad.players} /> : null}
+            {activeScreen === "matchday" ? <MatchdayBoardScreen {...matchdayBoard} players={squad.players} /> : null}
             {activeScreen === "squad" ? <SquadScreen {...squad} /> : null}
             {activeScreen === "sessions" ? <SessionBuilderScreen ageGroup={ageGroup.ageGroup} {...sessionBuilder} /> : null}
             {activeScreen === "toolbox" ? <CoachToolboxScreen {...ageGroup} /> : null}

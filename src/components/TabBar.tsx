@@ -30,5 +30,5 @@ const styles = StyleSheet.create({
   labelActive: { color: "#152118" },
   tab: { alignItems: "center", borderRadius: 18, flex: 1, justifyContent: "center", paddingVertical: 12 },
   tabActive: { backgroundColor: "#d6e58f" },
-  wrap: { backgroundColor: "#14281d", borderRadius: 24, bottom: 18, flexDirection: "row", gap: 8, left: 16, padding: 8, position: "absolute", right: 16 }
+  wrap: { backgroundColor: "#14281d", borderRadius: 24, flexDirection: "row", gap: 8, marginBottom: 12, marginHorizontal: 16, padding: 8 }
 });

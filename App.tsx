@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
 
 import { MenuDrawer } from "./src/components/MenuDrawer";
 import { TabBar } from "./src/components/TabBar";
@@ -30,18 +30,20 @@ export default function App() {
       <View style={styles.shell}>
         <View style={styles.backgroundOrbTop} />
         <View style={styles.backgroundOrbBottom} />
-        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-          <View style={styles.header}>
-            <Text style={styles.eyebrow}>Coach tools</Text>
-            <View style={styles.titleRow}><Text style={styles.title}>{copy.title}</Text><Pressable accessibilityLabel="Open menu" onPress={() => setMenuOpen(true)} style={styles.menuButton}><View style={styles.menuLine} /><View style={styles.menuLine} /><View style={styles.menuLine} /></Pressable></View>
-            <Text style={styles.subtitle}>{copy.subtitle}</Text>
-          </View>
-          {activeScreen === "gameTime" ? <GameTimeCalculatorScreen players={squad.players} /> : null}
-          {activeScreen === "squad" ? <SquadScreen {...squad} /> : null}
-          {activeScreen === "sessions" ? <SessionBuilderScreen ageGroup={ageGroup.ageGroup} {...sessionBuilder} /> : null}
-          {activeScreen === "toolbox" ? <CoachToolboxScreen {...ageGroup} /> : null}
-        </ScrollView>
-        <TabBar activeTab={activeScreen === "squad" ? "gameTime" : activeScreen} onChange={setActiveScreen} />
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.keyboardArea}>
+          <ScrollView automaticallyAdjustKeyboardInsets contentContainerStyle={styles.content} keyboardDismissMode="interactive" keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+            <View style={styles.header}>
+              <Text style={styles.eyebrow}>Coach tools</Text>
+              <View style={styles.titleRow}><Text style={styles.title}>{copy.title}</Text><Pressable accessibilityLabel="Open menu" onPress={() => setMenuOpen(true)} style={styles.menuButton}><View style={styles.menuLine} /><View style={styles.menuLine} /><View style={styles.menuLine} /></Pressable></View>
+              <Text style={styles.subtitle}>{copy.subtitle}</Text>
+            </View>
+            {activeScreen === "gameTime" ? <GameTimeCalculatorScreen players={squad.players} /> : null}
+            {activeScreen === "squad" ? <SquadScreen {...squad} /> : null}
+            {activeScreen === "sessions" ? <SessionBuilderScreen ageGroup={ageGroup.ageGroup} {...sessionBuilder} /> : null}
+            {activeScreen === "toolbox" ? <CoachToolboxScreen {...ageGroup} /> : null}
+          </ScrollView>
+          <TabBar activeTab={activeScreen === "squad" ? "gameTime" : activeScreen} onChange={setActiveScreen} />
+        </KeyboardAvoidingView>
         <MenuDrawer onClose={() => setMenuOpen(false)} onOpenSquad={() => { setActiveScreen("squad"); setMenuOpen(false); }} visible={menuOpen} />
       </View>
     </SafeAreaView>
@@ -58,11 +60,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#efe9de"
   },
   content: {
+    flexGrow: 1,
     paddingHorizontal: 20,
     paddingTop: 18,
-    paddingBottom: 104,
+    paddingBottom: 24,
     gap: 18
   },
+  keyboardArea: { flex: 1 },
   header: {
     gap: 8
   },

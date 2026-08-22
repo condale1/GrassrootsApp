@@ -16,6 +16,7 @@ type GameTimeOptions = {
   matchMinutes: number;
   playersOnPitch: number;
   rotationMinutes: number;
+  startingPlayer?: number;
   squadSize: number;
 };
 
@@ -25,20 +26,25 @@ export function createGameTimePlan({
   matchMinutes,
   playersOnPitch,
   rotationMinutes,
+  startingPlayer = 0,
   squadSize
 }: GameTimeOptions): GameTimePlan {
   const minutesByPlayer = Array.from({ length: squadSize }, () => 0);
   const periods: RotationPeriod[] = [];
-  let rotationCursor = 0;
-  let start = 0;
+  let rotationCursor = ((startingPlayer % squadSize) + squadSize) % squadSize;
   const extraRotationPoints = [...new Set(extraRotationMinutes ?? [])]
     .filter((minute) => minute > 0 && minute < matchMinutes)
     .sort((left, right) => left - right);
+  const rotationPoints = [...new Set([
+    0,
+    matchMinutes,
+    ...Array.from({ length: Math.ceil(matchMinutes / rotationMinutes) - 1 }, (_, index) => (index + 1) * rotationMinutes),
+    ...extraRotationPoints
+  ])].sort((left, right) => left - right);
 
-  while (start < matchMinutes) {
-    const nextRotation = Math.min(start + rotationMinutes, matchMinutes);
-    const extraRotation = extraRotationPoints.find((minute) => minute > start && minute < nextRotation);
-    const end = extraRotation ?? nextRotation;
+  for (let periodIndex = 0; periodIndex < rotationPoints.length - 1; periodIndex += 1) {
+    const start = rotationPoints[periodIndex];
+    const end = rotationPoints[periodIndex + 1];
     const duration = end - start;
     const eligiblePlayers = Array.from({ length: squadSize }, (_, index) => index);
     const playerOrder = eligiblePlayers.sort((left, right) => {
@@ -57,7 +63,6 @@ export function createGameTimePlan({
     });
     periods.push({ start, end, players });
     rotationCursor = (rotationCursor + players.length) % squadSize;
-    start = end;
   }
 
   return {

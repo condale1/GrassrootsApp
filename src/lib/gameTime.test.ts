@@ -17,6 +17,16 @@ describe("createGameTimePlan", () => {
 
   it("ignores duplicate or out-of-range extra rotation points", () => {
     const plan = createGameTimePlan({ extraRotationMinutes: [-1, 25, 25, 50], matchMinutes: 50, playersOnPitch: 5, rotationMinutes: 10, squadSize: 6 });
-    expect(plan.periods.map((period) => period.end)).toEqual([10, 20, 25, 35, 45, 50]);
+    expect(plan.periods.map((period) => period.end)).toEqual([10, 20, 25, 30, 40, 50]);
+  });
+
+  it("can achieve exact equality by adding requested mid-rotation substitutions", () => {
+    const plan = createGameTimePlan({ extraRotationMinutes: [5, 15, 25, 35], forceEqualTime: true, matchMinutes: 40, playersOnPitch: 5, rotationMinutes: 10, squadSize: 8 });
+    expect(plan.minutesByPlayer).toEqual(Array.from({ length: 8 }, () => 25));
+  });
+
+  it("uses a requested starting player to vary the opening group", () => {
+    const plan = createGameTimePlan({ forceEqualTime: true, matchMinutes: 40, playersOnPitch: 5, rotationMinutes: 10, squadSize: 8, startingPlayer: 3 });
+    expect(plan.periods[0].players).toEqual([3, 4, 5, 6, 7]);
   });
 });

@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "Grassroots FC",
-    "slug": "grassroots-fc",
+    "name": "The Coaches Toolkit",
+    "slug": "the-coaches-toolkit",
+    "icon": "./assets/coaches-toolkit-icon.png",
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",

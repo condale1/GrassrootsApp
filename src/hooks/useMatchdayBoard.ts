@@ -6,6 +6,7 @@ import { MatchdayDraft } from "../types";
 const storageKey = "grassroots-coach-tools-matchday-board";
 const initialDraft: MatchdayDraft = {
   opponent: "",
+  matchDate: "",
   venue: "",
   kickoff: "",
   focus: "",
@@ -34,7 +35,7 @@ export function useMatchdayBoard() {
         const saved = await AsyncStorage.getItem(storageKey);
         if (!saved) return;
         const parsed: unknown = JSON.parse(saved);
-        if (isMatchdayDraft(parsed)) setDraft(parsed);
+        if (isMatchdayDraft(parsed)) setDraft({ ...parsed, matchDate: typeof (parsed as Partial<MatchdayDraft>).matchDate === "string" ? parsed.matchDate : "" });
       } catch {
         // Keep the ready-to-use board when storage is unavailable.
       } finally {

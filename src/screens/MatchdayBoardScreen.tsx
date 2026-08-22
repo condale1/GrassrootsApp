@@ -9,10 +9,10 @@ type Props = { draft: MatchdayDraft; hasLoadedMatchday: boolean; players: Player
 export function MatchdayBoardScreen({ draft, hasLoadedMatchday, players, setDraft }: Props) {
   const availablePlayers = players.filter((player) => player.available);
   const completedChecks = draft.checks.filter((check) => check.done).length;
-  const date = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", weekday: "long" }).format(new Date());
+  const date = draft.matchDate.trim() || new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", weekday: "long" }).format(new Date());
   const shareCardRef = useRef<View>(null);
   const [isSharing, setIsSharing] = useState(false);
-  const updateField = (field: "focus" | "kickoff" | "opponent" | "venue", value: string) => setDraft((current) => ({ ...current, [field]: value }));
+  const updateField = (field: "focus" | "kickoff" | "matchDate" | "opponent" | "venue", value: string) => setDraft((current) => ({ ...current, [field]: value }));
   const sharePlan = async () => {
     setIsSharing(true);
     try {
@@ -31,7 +31,8 @@ export function MatchdayBoardScreen({ draft, hasLoadedMatchday, players, setDraf
 
     <View style={styles.details}>
       <TextInput accessibilityLabel="Opponent" onChangeText={(value) => updateField("opponent", value)} placeholder="Opponent" placeholderTextColor="#7a8278" style={styles.opponentInput} value={draft.opponent} />
-      <View style={styles.detailRow}><Field label="Kick-off" value={draft.kickoff} onChangeText={(value) => updateField("kickoff", value)} placeholder="10:30" /><Field label="Venue" value={draft.venue} onChangeText={(value) => updateField("venue", value)} placeholder="Home / away" /></View>
+      <View style={styles.detailRow}><Field label="Match date" value={draft.matchDate} onChangeText={(value) => updateField("matchDate", value)} placeholder="Sat 23 Aug" /><Field label="Kick-off" value={draft.kickoff} onChangeText={(value) => updateField("kickoff", value)} placeholder="10:30" /></View>
+      <Field label="Venue" value={draft.venue} onChangeText={(value) => updateField("venue", value)} placeholder="Home / away" />
     </View>
 
     <View style={styles.focusCard}>

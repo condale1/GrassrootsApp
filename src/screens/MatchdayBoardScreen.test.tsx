@@ -6,6 +6,7 @@ import { MatchdayDraft } from "../types";
 
 const draft: MatchdayDraft = {
   opponent: "Wanderers",
+  matchDate: "Saturday 23 August",
   venue: "Home",
   kickoff: "10:30",
   focus: "Receive and play forward",

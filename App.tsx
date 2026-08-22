@@ -11,25 +11,25 @@ import { resetScrollPosition } from "./src/lib/scroll";
 import { CoachToolboxScreen } from "./src/screens/CoachToolboxScreen";
 import { GameTimeCalculatorScreen } from "./src/screens/GameTimeCalculatorScreen";
 import { MatchdayBoardScreen } from "./src/screens/MatchdayBoardScreen";
+import { MatchdayHubScreen } from "./src/screens/MatchdayHubScreen";
+import { CoachingTimerScreen } from "./src/screens/CoachingTimerScreen";
 import { SessionBuilderScreen } from "./src/screens/SessionBuilderScreen";
 import { SquadScreen } from "./src/screens/SquadScreen";
 import { AppTab } from "./src/types";
 
 export default function App() {
-  const [activeScreen, setActiveScreen] = useState<AppTab | "squad">("gameTime");
+  const [activeScreen, setActiveScreen] = useState<AppTab | "squad">("matchday");
   const [menuOpen, setMenuOpen] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
   const ageGroup = useAgeGroup();
   const matchdayBoard = useMatchdayBoard();
   const sessionBuilder = useSessionBuilder();
   const squad = useSquad();
-  const copy = activeScreen === "gameTime"
-    ? { title: "Game Time" }
-    : activeScreen === "matchday"
+  const copy = activeScreen === "matchday"
       ? { title: "Matchday" }
     : activeScreen === "squad"
       ? { title: "Squad" }
-      : activeScreen === "sessions" ? { title: "Sessions" } : { title: "Coach Toolbox" };
+      : activeScreen === "sessions" ? { title: "Training" } : { title: "Coach Toolbox" };
   const navigateTo = (screen: AppTab | "squad") => {
     resetScrollPosition(scrollViewRef);
     setActiveScreen(screen);
@@ -44,13 +44,12 @@ export default function App() {
             <View style={styles.header}>
               <View style={styles.titleRow}><Text style={styles.title}>{copy.title}</Text><Pressable accessibilityLabel="Open menu" onPress={() => setMenuOpen(true)} style={styles.menuButton}><View style={styles.menuLine} /><View style={styles.menuLine} /><View style={styles.menuLine} /></Pressable></View>
             </View>
-            {activeScreen === "gameTime" ? <GameTimeCalculatorScreen players={squad.players} /> : null}
-            {activeScreen === "matchday" ? <MatchdayBoardScreen {...matchdayBoard} players={squad.players} /> : null}
+            {activeScreen === "matchday" ? <MatchdayHubScreen gameTime={<GameTimeCalculatorScreen players={squad.players} />} board={<MatchdayBoardScreen {...matchdayBoard} players={squad.players} />} timer={<CoachingTimerScreen />} onSectionChange={() => resetScrollPosition(scrollViewRef)} /> : null}
             {activeScreen === "squad" ? <SquadScreen {...squad} /> : null}
             {activeScreen === "sessions" ? <SessionBuilderScreen ageGroup={ageGroup.ageGroup} {...sessionBuilder} /> : null}
             {activeScreen === "toolbox" ? <CoachToolboxScreen {...ageGroup} /> : null}
           </ScrollView>
-          <TabBar activeTab={activeScreen === "squad" ? "gameTime" : activeScreen} onChange={navigateTo} />
+          <TabBar activeTab={activeScreen === "squad" ? "matchday" : activeScreen} onChange={navigateTo} />
         </KeyboardAvoidingView>
         <MenuDrawer onClose={() => setMenuOpen(false)} onOpenSquad={() => { navigateTo("squad"); setMenuOpen(false); }} visible={menuOpen} />
       </View>

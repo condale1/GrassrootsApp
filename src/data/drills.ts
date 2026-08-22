@@ -1,4 +1,4 @@
-export type Drill = { category: string; defaultMinutes: number; description: string; equipment: string; id: string; title: string };
+import { Drill } from "../types";
 
 export const drills: Drill[] = [
   { id: "traffic-lights", title: "Traffic Lights", category: "Arrival", defaultMinutes: 10, description: "Players dribble freely and respond to traffic-light calls.", equipment: "One ball each, cones" },
@@ -9,4 +9,4 @@ export const drills: Drill[] = [
   { id: "mini-match", title: "Mini Match", category: "Game", defaultMinutes: 15, description: "Finish with a simple small-sided match and one clear focus.", equipment: "Balls, bibs, goals" }
 ];
 
-export function findDrill(id: string) { return drills.find((drill) => drill.id === id) ?? drills[0]; }
+export function findDrill(id: string, library: Drill[] = drills) { return library.find((drill) => drill.id === id) ?? drills[0]; }

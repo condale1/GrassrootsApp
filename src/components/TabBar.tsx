@@ -3,9 +3,8 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { AppTab } from "../types";
 
 const tabs: { id: AppTab; label: string }[] = [
-  { id: "gameTime", label: "Game Time" },
   { id: "matchday", label: "Matchday" },
-  { id: "sessions", label: "Sessions" },
+  { id: "sessions", label: "Training" },
   { id: "toolbox", label: "Toolbox" }
 ];
 

@@ -40,9 +40,10 @@ describe("persisted coach data", () => {
     const { result } = await renderHook(() => useSessionBuilder());
     await waitFor(() => expect(result.current?.hasLoadedDraft).toBe(true));
     expect(result.current?.draft.title).toBe("Finishing");
+    expect(result.current?.draft.customDrills).toEqual([]);
 
     await act(() => result.current?.setDraft((draft) => ({ ...draft, title: "Defending" })));
-    await waitFor(() => expect(storage.setItem).toHaveBeenLastCalledWith("grassroots-coach-tools-session-draft", JSON.stringify({ title: "Defending", blocks: [{ id: "1", drillId: "traffic-lights", minutes: 10 }] })));
+    await waitFor(() => expect(storage.setItem).toHaveBeenLastCalledWith("grassroots-coach-tools-session-draft", JSON.stringify({ title: "Defending", blocks: [{ id: "1", drillId: "traffic-lights", minutes: 10 }], customDrills: [] })));
   });
 
   it("keeps matchday details and checklist progress on-device", async () => {
@@ -50,8 +51,9 @@ describe("persisted coach data", () => {
     const { result } = await renderHook(() => useMatchdayBoard());
     await waitFor(() => expect(result.current?.hasLoadedMatchday).toBe(true));
     expect(result.current?.draft.opponent).toBe("Rovers");
+    expect(result.current?.draft.matchDate).toBe("");
 
     await act(() => result.current?.setDraft((draft) => ({ ...draft, checks: [{ ...draft.checks[0], done: true }] })));
-    await waitFor(() => expect(storage.setItem).toHaveBeenLastCalledWith("grassroots-coach-tools-matchday-board", JSON.stringify({ opponent: "Rovers", venue: "Home", kickoff: "10:30", focus: "Play forward", checks: [{ id: "kit", label: "Balls", done: true }] })));
+    await waitFor(() => expect(storage.setItem).toHaveBeenLastCalledWith("grassroots-coach-tools-matchday-board", JSON.stringify({ opponent: "Rovers", venue: "Home", kickoff: "10:30", focus: "Play forward", checks: [{ id: "kit", label: "Balls", done: true }], matchDate: "" })));
   });
 });

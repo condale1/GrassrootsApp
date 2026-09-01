@@ -10,6 +10,9 @@
     "ios": {
       "bundleIdentifier": "com.condale1.grassrootsapp",
       "buildNumber": "1",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "supportsTablet": false
     },
     "android": {

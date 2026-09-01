@@ -4,21 +4,37 @@ import { useEffect, useState } from "react";
 import { Player } from "../types";
 
 const SQUAD_STORAGE_KEY = "grassroots-coach-tools-squad";
-const DEFAULT_PLAYERS: Player[] = Array.from({ length: 8 }, (_, index) => ({
-  id: `player-${index + 1}`,
-  name: `Player ${index + 1}`,
-  available: true
-}));
 
 function isStoredPlayer(value: unknown): value is Player {
   if (!value || typeof value !== "object") return false;
 
   const player = value as Player;
-  return typeof player.id === "string" && typeof player.name === "string" && typeof player.available === "boolean";
+  return (
+    typeof player.id === "string" &&
+    typeof player.name === "string" &&
+    typeof player.available === "boolean" &&
+    (player.position === undefined || typeof player.position === "string")
+  );
+}
+
+type StoredSquad = { hasCompletedSetup: boolean; players: Player[]; teamName: string };
+
+function isStoredSquad(value: unknown): value is StoredSquad {
+  if (!value || typeof value !== "object") return false;
+
+  const squad = value as StoredSquad;
+  return (
+    typeof squad.teamName === "string" &&
+    typeof squad.hasCompletedSetup === "boolean" &&
+    Array.isArray(squad.players) &&
+    squad.players.every(isStoredPlayer)
+  );
 }
 
 export function useSquad() {
-  const [players, setPlayers] = useState<Player[]>(DEFAULT_PLAYERS);
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [teamName, setTeamName] = useState("");
+  const [hasCompletedSetup, setHasCompletedSetup] = useState(false);
   const [hasLoadedSquad, setHasLoadedSquad] = useState(false);
 
   useEffect(() => {
@@ -28,7 +44,15 @@ export function useSquad() {
         if (!storedSquad) return;
 
         const parsedSquad: unknown = JSON.parse(storedSquad);
-        if (Array.isArray(parsedSquad) && parsedSquad.every(isStoredPlayer)) setPlayers(parsedSquad);
+        if (isStoredSquad(parsedSquad)) {
+          setPlayers(parsedSquad.players);
+          setTeamName(parsedSquad.teamName);
+          setHasCompletedSetup(parsedSquad.hasCompletedSetup);
+        } else if (Array.isArray(parsedSquad) && parsedSquad.every(isStoredPlayer)) {
+          // Existing installs used an array-only format, so keep their squad usable.
+          setPlayers(parsedSquad);
+          setHasCompletedSetup(true);
+        }
       } catch {
         // Retain the default squad if device storage cannot be read.
       } finally {
@@ -40,8 +64,19 @@ export function useSquad() {
   }, []);
 
   useEffect(() => {
-    if (hasLoadedSquad) void AsyncStorage.setItem(SQUAD_STORAGE_KEY, JSON.stringify(players));
-  }, [hasLoadedSquad, players]);
+    if (hasLoadedSquad) {
+      const squad: StoredSquad = { hasCompletedSetup, players, teamName };
+      void AsyncStorage.setItem(SQUAD_STORAGE_KEY, JSON.stringify(squad));
+    }
+  }, [hasCompletedSetup, hasLoadedSquad, players, teamName]);
 
-  return { hasLoadedSquad, players, setPlayers };
+  return {
+    hasCompletedSetup,
+    hasLoadedSquad,
+    players,
+    setHasCompletedSetup,
+    setPlayers,
+    setTeamName,
+    teamName,
+  };
 }

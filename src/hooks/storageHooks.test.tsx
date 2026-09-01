@@ -25,14 +25,24 @@ describe("persisted coach data", () => {
     await waitFor(() => expect(storage.setItem).toHaveBeenLastCalledWith("grassroots-coach-tools-age-group", "U11"));
   });
 
-  it("restores player availability and saves player edits", async () => {
+  it("migrates saved squads and preserves optional player positions", async () => {
     storage.getItem.mockResolvedValue(JSON.stringify([{ id: "a", name: "Ava", available: false }]));
     const { result } = await renderHook(() => useSquad());
     await waitFor(() => expect(result.current?.hasLoadedSquad).toBe(true));
     expect(result.current?.players).toEqual([{ id: "a", name: "Ava", available: false }]);
+    expect(result.current?.hasCompletedSetup).toBe(true);
 
-    await act(() => result.current?.setPlayers((players) => players.map((player) => ({ ...player, available: true }))));
-    await waitFor(() => expect(storage.setItem).toHaveBeenLastCalledWith("grassroots-coach-tools-squad", JSON.stringify([{ id: "a", name: "Ava", available: true }])));
+    await act(() => result.current?.setPlayers((players) => players.map((player) => ({ ...player, available: true, position: "GK" }))));
+    await waitFor(() => expect(storage.setItem).toHaveBeenLastCalledWith("grassroots-coach-tools-squad", JSON.stringify({ hasCompletedSetup: true, players: [{ id: "a", name: "Ava", available: true, position: "GK" }], teamName: "" })));
+  });
+
+  it("starts a first-time coach without placeholder players", async () => {
+    storage.getItem.mockResolvedValue(null);
+    const { result } = await renderHook(() => useSquad());
+
+    await waitFor(() => expect(result.current?.hasLoadedSquad).toBe(true));
+    expect(result.current?.hasCompletedSetup).toBe(false);
+    expect(result.current?.players).toEqual([]);
   });
 
   it("restores the session plan and persists its title", async () => {

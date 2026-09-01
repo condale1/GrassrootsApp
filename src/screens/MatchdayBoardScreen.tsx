@@ -9,6 +9,7 @@ type Props = {
   hasLoadedMatchday: boolean;
   players: Player[];
   setDraft: React.Dispatch<React.SetStateAction<MatchdayDraft>>;
+  teamName: string;
 };
 
 export function MatchdayBoardScreen({
@@ -16,6 +17,7 @@ export function MatchdayBoardScreen({
   hasLoadedMatchday,
   players,
   setDraft,
+  teamName,
 }: Props) {
   const availablePlayers = players.filter((player) => player.available);
   const completedChecks = draft.checks.filter((check) => check.done).length;
@@ -104,7 +106,7 @@ export function MatchdayBoardScreen({
             <Text style={styles.shareDate}>{date}</Text>
           </View>
           <Text style={styles.shareOpponent}>
-            {draft.opponent.trim() || "Opponent to be confirmed"}
+            {teamName.trim() || "Your team"} v {draft.opponent.trim() || "Opponent TBC"}
           </Text>
           <View style={styles.shareMeta}>
             <Text style={styles.shareMetaItem}>

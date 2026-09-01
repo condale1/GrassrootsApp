@@ -26,6 +26,7 @@ import { CoachingTimerScreen } from "./src/screens/CoachingTimerScreen";
 import { PrivacyPolicyScreen } from "./src/screens/PrivacyPolicyScreen";
 import { SessionBuilderScreen } from "./src/screens/SessionBuilderScreen";
 import { SquadScreen } from "./src/screens/SquadScreen";
+import { SquadSetupScreen } from "./src/screens/SquadSetupScreen";
 import { SupportUsScreen } from "./src/screens/SupportUsScreen";
 import { AppTab } from "./src/types";
 
@@ -39,6 +40,42 @@ export default function App() {
   const matchdayBoard = useMatchdayBoard();
   const sessionBuilder = useSessionBuilder();
   const squad = useSquad();
+
+  if (!squad.hasLoadedSquad) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar barStyle="dark-content" />
+      </SafeAreaView>
+    );
+  }
+
+  if (!squad.hasCompletedSetup) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar barStyle="dark-content" />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          style={styles.keyboardArea}
+        >
+          <ScrollView
+            automaticallyAdjustKeyboardInsets
+            contentContainerStyle={styles.setupContent}
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <SquadSetupScreen
+              onComplete={() => squad.setHasCompletedSetup(true)}
+              players={squad.players}
+              setPlayers={squad.setPlayers}
+              setTeamName={squad.setTeamName}
+              teamName={squad.teamName}
+            />
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    );
+  }
   const copy =
     activeScreen === "matchday"
       ? { title: "Matchday" }
@@ -93,6 +130,7 @@ export default function App() {
                   <MatchdayBoardScreen
                     {...matchdayBoard}
                     players={squad.players}
+                    teamName={squad.teamName}
                   />
                 }
                 timer={<CoachingTimerScreen />}
@@ -156,6 +194,11 @@ const styles = StyleSheet.create({
     paddingTop: 18,
     paddingBottom: 24,
     gap: 18,
+  },
+  setupContent: {
+    flexGrow: 1,
+    padding: 20,
+    paddingTop: 28,
   },
   keyboardArea: { flex: 1 },
   header: {

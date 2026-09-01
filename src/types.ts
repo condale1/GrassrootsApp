@@ -2,6 +2,7 @@ export type Player = {
   available: boolean;
   id: string;
   name: string;
+  position?: string;
 };
 
 export type AppTab = "matchday" | "sessions" | "toolbox";

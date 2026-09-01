@@ -19,7 +19,7 @@ describe("MatchdayBoardScreen", () => {
     const setDraft = jest.fn((updater: React.SetStateAction<MatchdayDraft>) => {
       currentDraft = typeof updater === "function" ? updater(currentDraft) : updater;
     });
-    const screen = await render(<MatchdayBoardScreen draft={currentDraft} hasLoadedMatchday players={[{ id: "ava", name: "Ava", available: true }, { id: "sam", name: "Sam", available: false }]} setDraft={setDraft} />);
+    const screen = await render(<MatchdayBoardScreen draft={currentDraft} hasLoadedMatchday players={[{ id: "ava", name: "Ava", available: true }, { id: "sam", name: "Sam", available: false }]} setDraft={setDraft} teamName="Oakwood U10s" />);
 
     expect(screen.getByText("1 available")).toBeTruthy();
     expect(screen.getAllByText("Ava")).toHaveLength(2);

@@ -23,14 +23,15 @@ import { GameTimeCalculatorScreen } from "./src/screens/GameTimeCalculatorScreen
 import { MatchdayBoardScreen } from "./src/screens/MatchdayBoardScreen";
 import { MatchdayHubScreen } from "./src/screens/MatchdayHubScreen";
 import { CoachingTimerScreen } from "./src/screens/CoachingTimerScreen";
+import { PrivacyPolicyScreen } from "./src/screens/PrivacyPolicyScreen";
 import { SessionBuilderScreen } from "./src/screens/SessionBuilderScreen";
 import { SquadScreen } from "./src/screens/SquadScreen";
 import { AppTab } from "./src/types";
 
 export default function App() {
-  const [activeScreen, setActiveScreen] = useState<AppTab | "squad">(
-    "matchday",
-  );
+  const [activeScreen, setActiveScreen] = useState<
+    AppTab | "privacy" | "squad"
+  >("matchday");
   const [menuOpen, setMenuOpen] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
   const ageGroup = useAgeGroup();
@@ -42,10 +43,12 @@ export default function App() {
       ? { title: "Matchday" }
       : activeScreen === "squad"
         ? { title: "Squad" }
-        : activeScreen === "sessions"
-          ? { title: "Training" }
-          : { title: "Coach Toolbox" };
-  const navigateTo = (screen: AppTab | "squad") => {
+        : activeScreen === "privacy"
+          ? { title: "Privacy" }
+          : activeScreen === "sessions"
+            ? { title: "Training" }
+            : { title: "Coach Toolbox" };
+  const navigateTo = (screen: AppTab | "privacy" | "squad") => {
     resetScrollPosition(scrollViewRef);
     setActiveScreen(screen);
   };
@@ -94,6 +97,7 @@ export default function App() {
               />
             ) : null}
             {activeScreen === "squad" ? <SquadScreen {...squad} /> : null}
+            {activeScreen === "privacy" ? <PrivacyPolicyScreen /> : null}
             {activeScreen === "sessions" ? (
               <SessionBuilderScreen
                 ageGroup={ageGroup.ageGroup}
@@ -105,7 +109,11 @@ export default function App() {
             ) : null}
           </ScrollView>
           <TabBar
-            activeTab={activeScreen === "squad" ? "matchday" : activeScreen}
+            activeTab={
+              activeScreen === "squad" || activeScreen === "privacy"
+                ? "matchday"
+                : activeScreen
+            }
             onChange={navigateTo}
           />
         </KeyboardAvoidingView>
@@ -113,6 +121,10 @@ export default function App() {
           onClose={() => setMenuOpen(false)}
           onOpenSquad={() => {
             navigateTo("squad");
+            setMenuOpen(false);
+          }}
+          onOpenPrivacy={() => {
+            navigateTo("privacy");
             setMenuOpen(false);
           }}
           visible={menuOpen}

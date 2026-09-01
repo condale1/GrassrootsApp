@@ -2,10 +2,12 @@ import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 
 export function MenuDrawer({
   onClose,
+  onOpenPrivacy,
   onOpenSquad,
   visible,
 }: {
   onClose: () => void;
+  onOpenPrivacy: () => void;
   onOpenSquad: () => void;
   visible: boolean;
 }) {
@@ -41,6 +43,18 @@ export function MenuDrawer({
               <Text style={styles.itemTitle}>Squad</Text>
               <Text style={styles.itemHint}>
                 Names and match-day availability
+              </Text>
+            </View>
+            <Text style={styles.chevron}>›</Text>
+          </Pressable>
+          <Pressable onPress={onOpenPrivacy} style={styles.item}>
+            <View style={styles.icon}>
+              <Text style={styles.iconText}>P</Text>
+            </View>
+            <View>
+              <Text style={styles.itemTitle}>Privacy</Text>
+              <Text style={styles.itemHint}>
+                How your local data is handled
               </Text>
             </View>
             <Text style={styles.chevron}>›</Text>

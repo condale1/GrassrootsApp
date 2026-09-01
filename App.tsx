@@ -26,11 +26,12 @@ import { CoachingTimerScreen } from "./src/screens/CoachingTimerScreen";
 import { PrivacyPolicyScreen } from "./src/screens/PrivacyPolicyScreen";
 import { SessionBuilderScreen } from "./src/screens/SessionBuilderScreen";
 import { SquadScreen } from "./src/screens/SquadScreen";
+import { SupportUsScreen } from "./src/screens/SupportUsScreen";
 import { AppTab } from "./src/types";
 
 export default function App() {
   const [activeScreen, setActiveScreen] = useState<
-    AppTab | "privacy" | "squad"
+    AppTab | "privacy" | "squad" | "support"
   >("matchday");
   const [menuOpen, setMenuOpen] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
@@ -45,10 +46,12 @@ export default function App() {
         ? { title: "Squad" }
         : activeScreen === "privacy"
           ? { title: "Privacy" }
+          : activeScreen === "support"
+            ? { title: "Support Us" }
           : activeScreen === "sessions"
             ? { title: "Training" }
             : { title: "Coach Toolbox" };
-  const navigateTo = (screen: AppTab | "privacy" | "squad") => {
+  const navigateTo = (screen: AppTab | "privacy" | "squad" | "support") => {
     resetScrollPosition(scrollViewRef);
     setActiveScreen(screen);
   };
@@ -98,6 +101,7 @@ export default function App() {
             ) : null}
             {activeScreen === "squad" ? <SquadScreen {...squad} /> : null}
             {activeScreen === "privacy" ? <PrivacyPolicyScreen /> : null}
+            {activeScreen === "support" ? <SupportUsScreen /> : null}
             {activeScreen === "sessions" ? (
               <SessionBuilderScreen
                 ageGroup={ageGroup.ageGroup}
@@ -110,7 +114,9 @@ export default function App() {
           </ScrollView>
           <TabBar
             activeTab={
-              activeScreen === "squad" || activeScreen === "privacy"
+              activeScreen === "squad" ||
+              activeScreen === "privacy" ||
+              activeScreen === "support"
                 ? "matchday"
                 : activeScreen
             }
@@ -125,6 +131,10 @@ export default function App() {
           }}
           onOpenPrivacy={() => {
             navigateTo("privacy");
+            setMenuOpen(false);
+          }}
+          onOpenSupport={() => {
+            navigateTo("support");
             setMenuOpen(false);
           }}
           visible={menuOpen}

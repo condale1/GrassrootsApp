@@ -1,14 +1,12 @@
 {
   "expo": {
-    "name": "The Coaches Toolkit",
-    "slug": "the-coaches-toolkit",
+    "name": "Benchside",
+    "slug": "benchside",
     "icon": "./assets/coaches-toolkit-icon.png",
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.condale1.grassrootsapp",
       "supportsTablet": true

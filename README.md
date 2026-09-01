@@ -1,4 +1,4 @@
-# Grassroots FC
+# Benchside
 
 An Expo React Native starter for a UK grassroots football mobile app.
 

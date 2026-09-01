@@ -1,5 +1,15 @@
 import { useRef, useState } from "react";
-import { KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import { MenuDrawer } from "./src/components/MenuDrawer";
 import { TabBar } from "./src/components/TabBar";
@@ -18,18 +28,23 @@ import { SquadScreen } from "./src/screens/SquadScreen";
 import { AppTab } from "./src/types";
 
 export default function App() {
-  const [activeScreen, setActiveScreen] = useState<AppTab | "squad">("matchday");
+  const [activeScreen, setActiveScreen] = useState<AppTab | "squad">(
+    "matchday",
+  );
   const [menuOpen, setMenuOpen] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
   const ageGroup = useAgeGroup();
   const matchdayBoard = useMatchdayBoard();
   const sessionBuilder = useSessionBuilder();
   const squad = useSquad();
-  const copy = activeScreen === "matchday"
+  const copy =
+    activeScreen === "matchday"
       ? { title: "Matchday" }
-    : activeScreen === "squad"
-      ? { title: "Squad" }
-      : activeScreen === "sessions" ? { title: "Training" } : { title: "Coach Toolbox" };
+      : activeScreen === "squad"
+        ? { title: "Squad" }
+        : activeScreen === "sessions"
+          ? { title: "Training" }
+          : { title: "Coach Toolbox" };
   const navigateTo = (screen: AppTab | "squad") => {
     resetScrollPosition(scrollViewRef);
     setActiveScreen(screen);
@@ -39,50 +54,113 @@ export default function App() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.shell}>
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.keyboardArea}>
-          <ScrollView automaticallyAdjustKeyboardInsets contentContainerStyle={styles.content} keyboardDismissMode="interactive" keyboardShouldPersistTaps="handled" ref={scrollViewRef} showsVerticalScrollIndicator={false}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          style={styles.keyboardArea}
+        >
+          <ScrollView
+            automaticallyAdjustKeyboardInsets
+            contentContainerStyle={styles.content}
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="handled"
+            ref={scrollViewRef}
+            showsVerticalScrollIndicator={false}
+          >
             <View style={styles.header}>
-              <View style={styles.titleRow}><Text style={styles.title}>{copy.title}</Text><Pressable accessibilityLabel="Open menu" onPress={() => setMenuOpen(true)} style={styles.menuButton}><View style={styles.menuLine} /><View style={styles.menuLine} /><View style={styles.menuLine} /></Pressable></View>
+              <View style={styles.titleRow}>
+                <Text style={styles.title}>{copy.title}</Text>
+                <Pressable
+                  accessibilityLabel="Open menu"
+                  onPress={() => setMenuOpen(true)}
+                  style={styles.menuButton}
+                >
+                  <View style={styles.menuLine} />
+                  <View style={styles.menuLine} />
+                  <View style={styles.menuLine} />
+                </Pressable>
+              </View>
             </View>
-            {activeScreen === "matchday" ? <MatchdayHubScreen gameTime={<GameTimeCalculatorScreen players={squad.players} />} board={<MatchdayBoardScreen {...matchdayBoard} players={squad.players} />} timer={<CoachingTimerScreen />} onSectionChange={() => resetScrollPosition(scrollViewRef)} /> : null}
+            {activeScreen === "matchday" ? (
+              <MatchdayHubScreen
+                gameTime={<GameTimeCalculatorScreen players={squad.players} />}
+                board={
+                  <MatchdayBoardScreen
+                    {...matchdayBoard}
+                    players={squad.players}
+                  />
+                }
+                timer={<CoachingTimerScreen />}
+                onSectionChange={() => resetScrollPosition(scrollViewRef)}
+              />
+            ) : null}
             {activeScreen === "squad" ? <SquadScreen {...squad} /> : null}
-            {activeScreen === "sessions" ? <SessionBuilderScreen ageGroup={ageGroup.ageGroup} {...sessionBuilder} /> : null}
-            {activeScreen === "toolbox" ? <CoachToolboxScreen {...ageGroup} /> : null}
+            {activeScreen === "sessions" ? (
+              <SessionBuilderScreen
+                ageGroup={ageGroup.ageGroup}
+                {...sessionBuilder}
+              />
+            ) : null}
+            {activeScreen === "toolbox" ? (
+              <CoachToolboxScreen {...ageGroup} />
+            ) : null}
           </ScrollView>
-          <TabBar activeTab={activeScreen === "squad" ? "matchday" : activeScreen} onChange={navigateTo} />
+          <TabBar
+            activeTab={activeScreen === "squad" ? "matchday" : activeScreen}
+            onChange={navigateTo}
+          />
         </KeyboardAvoidingView>
-        <MenuDrawer onClose={() => setMenuOpen(false)} onOpenSquad={() => { navigateTo("squad"); setMenuOpen(false); }} visible={menuOpen} />
+        <MenuDrawer
+          onClose={() => setMenuOpen(false)}
+          onOpenSquad={() => {
+            navigateTo("squad");
+            setMenuOpen(false);
+          }}
+          visible={menuOpen}
+        />
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#f3f0e8"
-  },
+  safeArea: { flex: 1, backgroundColor: "#f4efe3" },
   shell: {
     flex: 1,
-    backgroundColor: "#f3f0e8"
+    backgroundColor: "#f4efe3",
   },
   content: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingTop: 24,
+    paddingTop: 18,
     paddingBottom: 24,
-    gap: 18
+    gap: 18,
   },
   keyboardArea: { flex: 1 },
-  header: { paddingBottom: 2 },
-  menuButton: { alignItems: "center", backgroundColor: "#19382a", borderRadius: 12, gap: 4, height: 42, justifyContent: "center", width: 42 },
-  menuLine: { backgroundColor: "#f4f0e5", borderRadius: 2, height: 2, width: 17 },
-  title: {
-    color: "#14281d",
-    fontFamily: "Avenir Next Condensed",
-    fontSize: 38,
-    fontWeight: "800",
-    letterSpacing: -1.4
+  header: {
+    borderBottomColor: "#d9d1c1",
+    borderBottomWidth: 1,
+    paddingBottom: 14,
   },
-  titleRow: { alignItems: "center", flexDirection: "row", justifyContent: "space-between" }
+  menuButton: {
+    alignItems: "center",
+    backgroundColor: "#173a2a",
+    borderRadius: 5,
+    gap: 4,
+    height: 38,
+    justifyContent: "center",
+    width: 38,
+  },
+  menuLine: { backgroundColor: "#f4efe3", height: 2, width: 16 },
+  title: {
+    color: "#173a2a",
+    fontFamily: "Avenir Next Condensed",
+    fontSize: 40,
+    fontWeight: "800",
+    letterSpacing: -1.1,
+  },
+  titleRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
 });
